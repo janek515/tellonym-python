@@ -114,7 +114,7 @@ class Tellonym:
 
         results = r.json()['results']
 
-        if exact_match == True:
+        if exact_match:
             for index, _ in enumerate(results):
                 if case_sensitive:
                     if username in results[index]['username']:
@@ -154,7 +154,7 @@ class Tellonym:
             "Success": Tell sucessfully sent
         """
 
-        if anonymous == False:
+        if not anonymous:
             body = {
                 'senderStatus': 2,
                 'previousRouteName': 'Result',
@@ -207,3 +207,36 @@ class Tellonym:
             raise UnauthorizedError
 
         return 'Success'
+
+    def answer_tell(self, id, answer):
+
+        """
+            Answers a specific Tell for the current user
+
+            Args:
+                id (int): the id of the tell to answer
+                answer (str): text to send as the answer
+
+            Returns:
+                "Success": Tell answered
+        """
+        body = {
+            'answer': answer,
+            'tellId': id,
+            'limit': 13
+        }
+
+        r = requests.post(self.create_answer_url, json=body, headers=self.auth_header)
+
+        response = r.json()
+
+        if r.status_code == 200:
+            return response
+        elif response['err']['code'] == 'NOT_FOUND':
+            raise TellNotFoundError
+        elif response['err']['code'] == "PARAMETER_INVALID":
+            raise InvalidParameterError
+        elif response['err']['code'] == 'TOKEN_INVALID':
+            raise UnauthorizedError
+        else:
+            raise UnknownError

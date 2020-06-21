@@ -1,3 +1,6 @@
+from tellonym.Answer import Answer
+
+
 class Tell:
 
     def __init__(self, client, input):
@@ -23,9 +26,17 @@ class Tell:
 
         Args:
             input (str): answer string
+
+        returns:
+            Answer class
         """
+        data = self.client.answer_tell(self.id, input)
+        answer = Answer(self.client, data['answer'])
+
+        return answer
 
     def delete(self):
         """
         Deletes the received tell
         """
+        print(self.client.delete_tell(self.id))

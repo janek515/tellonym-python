@@ -1,5 +1,7 @@
 import requests
 
+from tellonym.exceptions import *
+
 
 class Answer:
 
@@ -12,7 +14,7 @@ class Answer:
         self.tell = input['tell']
         self.sender_status = input['senderStatus']
         self.sender = input['sender']
-        self.recipient_id = input['userId']
+        self.recipient_id = input['user']['id']
         self.is_current_user_tell_sender = input['isCurrentUserTellSender']
         self.likes = input['likes']  # to-do: put this in a seperate class (?)
 
