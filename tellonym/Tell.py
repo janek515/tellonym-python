@@ -1,5 +1,3 @@
-import json
-
 class Tell:
 
     def __init__(self, client, input):
@@ -15,11 +13,10 @@ class Tell:
         self.sender = input['sender']
 
     def is_anonymous_tell(self):
-
         if self.sender_status == 2:
             return False
         return True
-        
+
     def answer(self, input):
         """
         Answers to the recieved tell
