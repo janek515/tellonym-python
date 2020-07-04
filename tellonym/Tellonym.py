@@ -27,6 +27,7 @@ class Tellonym:
         self.create_answer_url = self.base_url + '/answers/create'
         self.delete_answer_url = self.base_url + '/answers/destroy'
         self.search_user_url = self.base_url + '/search/users'
+        self.profile_url = self.base_url + '/profiles/id/{0}'
         self.non_auth_header = {'user-agent': 'Tellonym/180 CFNetwork/976 Darwin/18.2.0',
                                 'tellonym-client': 'ios:2.14.1'}
         self.auth = 'Bearer ' + self.__get_request_token(username, password)
@@ -47,8 +48,8 @@ class Tellonym:
 
         body = {
             'country': 'DE',
-            'deviceName': 'tellonym-for-python',
-            'deviceType': 'ios',
+            'deviceName': 'SAMSUNG S10',
+            'deviceType': 'android',
             'lang': 'de',
             'email': username,
             'password': password,
@@ -99,7 +100,46 @@ class Tellonym:
         profile = Profile(self, r.json())
         return profile
 
-    def get_user(self, username, exact_match=False, case_sensitive=False):
+    def get_profile_by_id(self, user_id):
+        """
+        Fetches any profile
+
+        Args:
+            user_id: the id of the user you want to get the profile from
+
+        Returns:
+            Profile (class): Returns profile object with all the current user's information
+        """
+
+        r = requests.get(self.profile_url.format(user_id), headers=self.auth_header)
+
+        return Profile(self, r.json())
+
+    def get_users_with_tells(self, username, min_tells = 3):
+        payload = {'searchString': username.lower(), 'term': username.lower(), 'limit': '500'}
+        r = requests.get(self.search_user_url, params=payload, headers=self.auth_header)
+
+        if r.status_code != 200:
+            print("HTTP error: " + str(r.status_code))
+            print("Header:" + str(r.headers))
+            raise ConnectionError
+
+        if r.json().keys().__contains__('results'):
+            results = r.json()['results']
+        else:
+            return "ERROR OCCURED WHILE FETCHING USER"
+
+        users = []
+
+        for index, _ in enumerate(results):
+            user = User(results[index])
+            profile = self.get_profile_by_id(user.id)
+            if len(profile.answers) >= min_tells:
+                users.append(user)
+
+        return users
+
+    def get_user(self, username, exact_match=True, case_sensitive=False):
         """
         Tries to fetch a user by its given name
 
@@ -109,10 +149,13 @@ class Tellonym:
             case_sensitive (bool): only search for the name in case sensitive (defaults to false)
         """
 
-        payload = {'searchString': username, 'term': username, 'limit': '13'}
+        payload = {'searchString': username.lower(), 'term': username.lower(), 'limit': '13'}
         r = requests.get(self.search_user_url, params=payload, headers=self.auth_header)
 
-        results = r.json()['results']
+        if r.json().keys().__contains__('results'):
+            results = r.json()['results']
+        else:
+            return "ERROR OCCURED WHILE FETCHING USER"
 
         if exact_match:
             for index, _ in enumerate(results):
