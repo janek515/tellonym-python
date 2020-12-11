@@ -1,76 +1,80 @@
-from tellonym.Config import Config
 from tellonym.Answer import Answer
+from tellonym.Config import Config
 from tellonym.Link import Link
+import tellonym.utils as utils
 
 
 class Profile:
 
     def __init__(self, client, input):
         self.__client = client
-        self.id = input['id']
-        self.email = input['email']
-        self.display_name = input['displayName']
-        self.username = input['username']
-        self.type = input['type']
-        self.language = input['lang']
-        self.location = input['location']
-        self.page_id = input['pageId']
-        self.twitter_username = input['twitterUsername']
-        self.instagram_username = input['instagramUsername']
-        self.is_email_notifications_enabled = input['isEmailNotificationsEnabled']
-        self.email_polling_type = input['emailPollingType']
-        self.creation_date = input['createdAt']
-        self.is_safety_code_set = input['isSafetyCodeSet']
-        self.twitter_id = input['twitterId']
-        self.instagram_id = input['instagramId']
-        self.theme = input['theme']
-        self.about_me = input['aboutMe']
-        self.avatar_file_name = input['avatarFileName']
-        self.is_searchable = input['isSearchable']
-        self.ad_free_until = input['adfreeUntil']
-        self.last_active_at = input['lastActiveAt']
-        self.likes_count = input['likesCount']
-        self.follower_count = input['followerCount']
-        self.anonymous_follower_count = input['anonymousFollowerCount']
-        self.following_count = input['followingCount']
-        self.tell_count = input['tellCount']
-        self.answer_count = input['answerCount']
-        self.is_verified = input['isVerified']
-        self.push_notification_token = input['pushNotificationToken']
-        self.is_push_notifications_enabled = input['isPushNotificationsEnabled']
-        self.is_push_notifications_enabled_system = input['isPushNotificationsEnabledSystem']
-        self.is_push_notifications_tell_enabled = input['isPushNotificationsTellEnabled']
-        self.is_push_notifications_answer_enabled = input['isPushNotificationsAnswerEnabled']
-        self.is_push_notifications_liked_enabled = input['isPushNotificationsLikedEnabled']
+        self.orig_input = input
+        self.id = utils.get_json_attr(input, 'id')
+        self.email = utils.get_json_attr(input, 'email')
+        self.display_name = utils.get_json_attr(input, 'displayName')
+        self.username = utils.get_json_attr(input, 'username')
+        self.type = utils.get_json_attr(input, 'type')
+        self.language = utils.get_json_attr(input, 'lang')
+        self.location = utils.get_json_attr(input, 'location')
+        self.page_id = utils.get_json_attr(input, 'pageId')
+        self.twitter_username = utils.get_json_attr(input, 'twitterUsername')
+        self.instagram_username = utils.get_json_attr(input, 'instagramUsername')
+        self.is_email_notifications_enabled = utils.get_json_attr(input, 'isEmailNotificationsEnabled')
+        self.email_polling_type = utils.get_json_attr(input, 'emailPollingType')
+        self.creation_date = utils.get_json_attr(input, 'createdAt')
+        self.is_safety_code_set = utils.get_json_attr(input, 'isSafetyCodeSet')
+        self.twitter_id = utils.get_json_attr(input, 'twitterId')
+        self.instagram_id = utils.get_json_attr(input, 'instagramId')
+        self.theme = utils.get_json_attr(input, 'theme')
+        self.about_me = utils.get_json_attr(input, 'aboutMe')
+        self.avatar_file_name = utils.get_json_attr(input, 'avatarFileName')
+        self.is_searchable = utils.get_json_attr(input, 'isSearchable')
+        self.ad_free_until = utils.get_json_attr(input, 'adfreeUntil')
+        self.last_active_at = utils.get_json_attr(input, 'lastActiveAt')
+        self.likes_count = utils.get_json_attr(input, 'likesCount')
+        self.follower_count = utils.get_json_attr(input, 'followerCount')
+        self.anonymous_follower_count = utils.get_json_attr(input, 'anonymousFollowerCount')
+        self.following_count = utils.get_json_attr(input, 'followingCount')
+        self.tell_count = utils.get_json_attr(input, 'tellCount')
+        self.answer_count = utils.get_json_attr(input, 'answerCount')
+        self.is_verified = utils.get_json_attr(input, 'isVerified')
+        self.push_notification_token = utils.get_json_attr(input, 'pushNotificationToken')
+        self.is_push_notifications_enabled = utils.get_json_attr(input, 'isPushNotificationsEnabled')
+        self.is_push_notifications_enabled_system = utils.get_json_attr(input, 'isPushNotificationsEnabledSystem')
+        self.is_push_notifications_tell_enabled = utils.get_json_attr(input, 'isPushNotificationsTellEnabled')
+        self.is_push_notifications_answer_enabled = utils.get_json_attr(input, 'isPushNotificationsAnswerEnabled')
+        self.is_push_notifications_liked_enabled = utils.get_json_attr(input, 'isPushNotificationsLikedEnabled')
         self.is_push_notifications_anonymous_subscription_enabled = \
-            input['isPushNotificationsAnonymousSubscriptionEnabled']
-        self.is_push_notifications_public_subscription_enabled = input['isPushNotificationsPublicSubscriptionEnabled']
-        self.phone_prefix = input['phonePrefix']
-        self.phone_suffix = input['phoneNumber']
-        self.phone_number = self.phone_prefix + self.phone_suffix
-        self.is_tells_only_from_registered = input['isTellsOnlyFromRegistered']
-        self.is_allowed_to_moderate = input['isAllowedToModerate']
-        self.link_data = self.__get_link_data(input['linkData'])
-        self.has_allowed_emails = input['hasAllowedEmails']
-        self.hasAllowedSearchByPhone = input['hasAllowedSearchByPhone']
-        self.hasAllowedShowActivity = input['hasAllowedShowActivity']
-        self.is_under_16 = input['isUnder16']
-        self.parental_email = input['parentalEmail']
-        self.safety_level_sex_harass = input['safetyLevelSexHarass']
-        self.safety_level_insult = input['safetyLevelInsult']
-        self.safety_level_spam = input['safetyLevelSpam']
-        self.has_password = input['hasPassword']
-        self.is_twitter_connected = input['isTwitterConnected']
-        self.is_precise_birthdate = input['isPreciseBirthdate']
-        self.gender = input['gender']
-        self.birthdate = input['birthdate']
-        self.has_allowed_featuring = input['hasAllowedFeaturing']
-        self.has_allowed_show_age = input['hasAllowedShowAge']
-        self.has_allowed_search_by_location = input['hasAllowedSearchByLocation']
-        self.city = input['city']
-        self.country = input['country']
-        self.answers = self.__get_answers(input['answers'])
-        self.config = Config(input['config'])
+            utils.get_json_attr(input, 'isPushNotificationsAnonymousSubscriptionEnabled')
+        self.is_push_notifications_public_subscription_enabled = \
+            utils.get_json_attr(input, 'isPushNotificationsPublicSubscriptionEnabled')
+        self.phone_prefix = utils.get_json_attr(input, 'phonePrefix')
+        self.phone_suffix = utils.get_json_attr(input, 'phoneNumber')
+        if self.phone_prefix is not None and self.phone_suffix is not None:
+            self.phone_number = self.phone_prefix + self.phone_suffix
+        self.is_tells_only_from_registered = utils.get_json_attr(input, 'isTellsOnlyFromRegistered')
+        self.is_allowed_to_moderate = utils.get_json_attr(input, 'isAllowedToModerate')
+        self.link_data = self.__get_link_data(utils.get_json_attr(input, 'linkData'))
+        self.has_allowed_emails = utils.get_json_attr(input, 'hasAllowedEmails')
+        self.hasAllowedSearchByPhone = utils.get_json_attr(input, 'hasAllowedSearchByPhone')
+        self.hasAllowedShowActivity = utils.get_json_attr(input, 'hasAllowedShowActivity')
+        self.is_under_16 = utils.get_json_attr(input, 'isUnder16')
+        self.parental_email = utils.get_json_attr(input, 'parentalEmail')
+        self.safety_level_sex_harass = utils.get_json_attr(input, 'safetyLevelSexHarass')
+        self.safety_level_insult = utils.get_json_attr(input, 'safetyLevelInsult')
+        self.safety_level_spam = utils.get_json_attr(input, 'safetyLevelSpam')
+        self.has_password = utils.get_json_attr(input, 'hasPassword')
+        self.is_twitter_connected = utils.get_json_attr(input, 'isTwitterConnected')
+        self.is_precise_birthdate = utils.get_json_attr(input, 'isPreciseBirthdate')
+        self.gender = utils.get_json_attr(input, 'gender')
+        self.birthdate = utils.get_json_attr(input, 'birthdate')
+        self.has_allowed_featuring = utils.get_json_attr(input, 'hasAllowedFeaturing')
+        self.has_allowed_show_age = utils.get_json_attr(input, 'hasAllowedShowAge')
+        self.has_allowed_search_by_location = utils.get_json_attr(input, 'hasAllowedSearchByLocation')
+        self.city = utils.get_json_attr(input, 'city')
+        self.country = utils.get_json_attr(input, 'country')
+        self.answers = self.__get_answers(utils.get_json_attr(input, 'answers'))
+        # self.config = Config(utils.get_json_attr(input, 'config'))
 
     def __get_link_data(self, input):
         """
@@ -119,3 +123,6 @@ class Profile:
         if self.phone_suffix == 12345678:
             return True
         return False
+
+    def __str__(self):
+        return "[{0}] Profile {1}".format(self.id, self.display_name)

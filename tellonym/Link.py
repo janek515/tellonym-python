@@ -1,5 +1,3 @@
-
-
 class Link:
 
     def __init__(self, input):
